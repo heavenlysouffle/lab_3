@@ -1,0 +1,40 @@
+[
+    {
+        "Name": "Mondstadt"
+    },
+    {
+        "Regular price": 250
+    },
+    {
+        "1": [
+            {
+                "Type": "Student"
+            },
+            {
+                "Surname": "Alberich"
+            },
+            {
+                "Name": "Kaeya"
+            },
+            {
+                "Price": 125.0
+            }
+        ]
+    },
+    {
+        "2": [
+            {
+                "Type": "Advance"
+            },
+            {
+                "Surname": "Ragnvindr"
+            },
+            {
+                "Name": "Diluc"
+            },
+            {
+                "Price": 150.0
+            }
+        ]
+    }
+]
