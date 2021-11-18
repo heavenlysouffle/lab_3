@@ -6,6 +6,8 @@ from constants import *
 
 
 class Pizza:
+    """Class that describes pizza (contains price and ingredients)"""
+
     def __init__(self):
         self.__price = BASIC_PIZZA_PRICE
         self.__ingredients = []
@@ -68,6 +70,8 @@ class Pizza:
                          "Parmigiano": parmigiano, "Capers": capers, "Speck": speck}
 
     def add_ingredients(self, *components):
+        """Method to add additional ingredient(s) to pizza"""
+
         for component in components:
             if not isinstance(component, str):
                 raise TypeError
@@ -94,6 +98,8 @@ class Pizza:
         self.__price = price
 
     def ser_ingredients(self):
+        """Method to write information about all possible ingredients to json file"""
+
         data = []
         i = 0
         for ingredient in self.__add_ingredients:
@@ -107,6 +113,8 @@ class Pizza:
 
 
 class Romana(Pizza):
+    """Class that describes Romana pizza (basic ingredients: tomato sauce, mozzarella, anchovies)"""
+
     def __init__(self):
         super().__init__()
         super().tomato_sauce()
@@ -115,6 +123,8 @@ class Romana(Pizza):
 
 
 class Viennese(Pizza):
+    """Class that describes Viennese pizza (basic ingredients: tomato sauce, mozzarella, vienna sausages)"""
+
     def __init__(self):
         super().__init__()
         super().tomato_sauce()
@@ -123,6 +133,9 @@ class Viennese(Pizza):
 
 
 class Capricciosa(Pizza):
+    """Class that describes Capricciosa pizza (basic ingredients: tomato sauce, mozzarella, ham, mushrooms, artichokes,
+    olives)"""
+
     def __init__(self):
         super().__init__()
         super().tomato_sauce()
@@ -134,6 +147,9 @@ class Capricciosa(Pizza):
 
 
 class QuattroFormaggi(Pizza):
+    """Class that describes Quattro Formaggi pizza (basic ingredients: tomato sauce, mozzarella, fontina, gorgonzola,
+    parmigiano)"""
+
     def __init__(self):
         super().__init__()
         super().tomato_sauce()
@@ -144,16 +160,21 @@ class QuattroFormaggi(Pizza):
 
 
 class Siciliana(Pizza):
+    """Class that describes Siciliana pizza (basic ingredients: tomato sauce, mozzarella, capers, anchovies,
+    anchovies)"""
+
     def __init__(self):
         super().__init__()
         super().tomato_sauce()
         super().mozzarella()
         super().capers()
         super().anchovies()
-        super().olives()
+        super().anchovies()
 
 
 class Tirolese(Pizza):
+    """Class that describes Tirolese pizza (basic ingredients: tomato sauce, mozzarella, speck)"""
+
     def __init__(self):
         super().__init__()
         super().tomato_sauce()
@@ -162,6 +183,8 @@ class Tirolese(Pizza):
 
 
 class Prosciutto(Pizza):
+    """Class that describes Prosciutto pizza (basic ingredients: tomato sauce, mozzarella, ham, mushrooms)"""
+
     def __init__(self):
         super().__init__()
         super().tomato_sauce()
@@ -195,6 +218,8 @@ class Customer:
 
 
 class Order:
+    """Class that describes pizza order (contains number of pizza in order, total price, order data)"""
+
     __number = 0
     __total = 0
     __data = []
@@ -205,20 +230,21 @@ class Order:
         __number = 0
         if not isinstance(customer, Customer):
             raise TypeError
-        try:
-            self.__day = order_day.strftime('%A')
-        except:
-            raise TypeError("Invalid order date")
+        self.__day = order_day.strftime('%A')
         self.__date = date
         self.__customer = customer
 
     def pizza_of_the_day(self):
+        """Method to add pizza of the day to order"""
+
         pizza = self.pizza_week[self.__day]
         self.__number += 1
         self.__data.append({self.__number: self.__day + " " + str(pizza) + " " + str(pizza.ingredients) + " : " + str(pizza.price) + "$"})
         self.__total += pizza.price
 
     def add_pizza(self, pizza):
+        """Method to add pizza to order"""
+
         if not isinstance(pizza, Pizza):
             raise TypeError
         self.__number += 1
@@ -226,6 +252,8 @@ class Order:
         self.__total += pizza.price
 
     def ser_week(self):
+        """Method to write information about pizza of the day for week to json file"""
+
         data = []
         for key in self.pizza_week.keys():
             data.append({key: str(self.pizza_week[key])})
@@ -234,15 +262,17 @@ class Order:
 
     def serialization(self, filepath):
         """Method to write order information to json file"""
+        
         if not os.path.exists(filepath):
             raise OSError("File was not found")
-        self.__data.append({"total" : self.__total})
+        self.__data.append({"total": self.__total})
         with open(filepath, "w") as json_file:
             json.dump(self.__data, json_file, indent=4)
 
     @staticmethod
     def deserialization(filepath):
         """Method to extract order information from json file"""
+
         if not os.path.exists(filepath):
             raise OSError("File was not found")
         if os.path.getsize(filepath):
