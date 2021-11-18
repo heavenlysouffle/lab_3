@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import date
+from constants import *
 
 
 class Customer:
@@ -51,7 +52,7 @@ class Event:
     __basic_price = 0
     __tickets_data = []
 
-    def __init__(self, name, date, tickets_max=50, basic_price=0):
+    def __init__(self, name, date, tickets_max=TICKET_MAX, basic_price=0):
         if not isinstance(name, str):
             raise TypeError
         if not name:
@@ -67,15 +68,15 @@ class Event:
         if Event._ticket_number >= Event.__tickets_max:
             raise ValueError("All tickets are sold")
         info = []
-        if (self.__date - date).days <= 356:
+        if (self.__date - date).days <= EVENT_PERIOD:
             if customer.student_ind:
                 ticket = Student(customer)
                 info.append({"Type": "Student"})
             else:
-                if (self.__date - date).days >= 60:
+                if (self.__date - date).days >= ADVANCE_TICKET_DATE:
                     ticket = Advance(customer)
                     info.append({"Type": "Advance"})
-                elif (self.__date - date).days <= 10:
+                elif (self.__date - date).days <= LATE_TICKET_DATE:
                     ticket = Late(customer)
                     info.append({"Type": "Late"})
                 else:
@@ -171,8 +172,8 @@ class Event:
     def tickets_max(self, tickets_max):
         if not isinstance(tickets_max, int):
             raise TypeError
-        if tickets_max < 5:
-            raise ValueError("The maximum number of tickets cannot be less than 5")
+        if tickets_max < TICKET_MAX_MINIMUM:
+            raise ValueError("The maximum number of tickets cannot be less than " + TICKET_MAX_MINIMUM)
         Event.__ticket_max = tickets_max
 
     @basic_price.setter
@@ -208,6 +209,7 @@ class Regular(Event):
     def customer(self):
         return self.__customer
 
+
 class Advance(Event):
     """Class that builds advanced ticket.
     Contains ticket's price (sale 40% of basic price for event), number and information about a customer"""
@@ -215,7 +217,7 @@ class Advance(Event):
     def __init__(self, customer):
         if not isinstance(customer, Customer):
             raise TypeError
-        self.__price = 0.6 * self.basic_price
+        self.__price = ADVANCE_TICKET_COEFF * self.basic_price
         Event._ticket_number += 1
         self.__id = Event._ticket_number
         self.__customer = customer
@@ -240,7 +242,7 @@ class Student(Event):
     def __init__(self, customer):
         if not isinstance(customer, Customer):
             raise TypeError
-        self.__price = 0.5 * self.basic_price
+        self.__price = STUDENT_TICKET_COEFF * self.basic_price
         Event._ticket_number += 1
         self.__id = Event._ticket_number
         self.__customer = customer
@@ -265,7 +267,7 @@ class Late(Event):
     def __init__(self, customer):
         if not isinstance(customer, Customer):
             raise TypeError
-        self.__price = 1.1 * self.basic_price
+        self.__price = LATE_TICKET_COEFF * self.basic_price
         Event._ticket_number += 1
         self.__id = Event._ticket_number
         self.__customer = customer
